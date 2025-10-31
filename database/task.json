@@ -1,7 +1,8 @@
 [
   {
     "title": "Đi học",
-    "id": 1
+    "id": 1,
+    "completed": false
   },
   {
     "title": "Chơi thể thao",
