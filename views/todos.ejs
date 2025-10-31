@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <title><%= title %></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <script>
       let todos = [];
@@ -109,14 +110,32 @@
     </script>
   </head>
 
-  <body class="bg-gray-100 min-h-screen flex font-sans">
-    <aside class="hidden md:flex w-64 bg-white border-r flex-col p-6 shadow-sm">
-      <h2 class="text-2xl font-bold mb-8 text-blue-600">TodoApp</h2>
+  <body class="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-300 font-sans flex">
+    <aside class="hidden md:flex flex-col w-64 bg-white shadow-xl p-8">
+      <div>
+        <h2 class="text-3xl font-bold text-blue-600 mb-8">Menu</h2>
 
-      <nav class="space-y-4">
-        <a href="/" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
-        <a href="/todos" class="text-blue-600 font-medium">Todos</a>
-      </nav>
+        <nav class="space-y-2">
+          <a href="/" class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+          </a>
+          <a href="/todos" class="flex items-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-lg font-medium shadow-md">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <span>Todos</span>
+          </a>
+        </nav>
+      </div>
+
+      <footer class="mt-auto pt-6 border-t">
+        <p class="text-sm text-gray-500 mb-3 text-center">Kết nối với tôi</p>
+        <a href="https://www.facebook.com/share/g/19oiQixM4S/"
+          target="_blank"
+          class="flex items-center justify-center w-full py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition">
+          <i class="fab fa-facebook-f mr-2"></i>
+          Facebook
+        </a>
+      </footer>
     </aside>
 
     <main class="flex-1 p-6">
