@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      let todos = [];
+
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = "✅ " + msg;
+        t.classList.remove("opacity-0", "translate-y-3");
+        setTimeout(() => t.classList.add("opacity-0", "translate-y-3"), 1500);
+      }
+
+      function loadTodos() {
+        fetch("/api/todos", { cache: 'no-store' })
+          .then(res => res.json())
+          .then(data => {
+            todos = data;
+            renderTodoList(data);
+          });
+      }
+
+      function addTodo() {
+        const title = document.getElementById("title").value.trim();
+        if (!title) return false;
+
+        fetch(`/api/todos`, {
+          method: "POST",
+          cache: 'no-store',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title }),
+        })
+          .then(res => res.json())
+          .then(() => {
+            document.getElementById("title").value = "";
+            loadTodos();
+            showToast("Todo added");
+          });
+
+        return false;
+      }
+
+      function toogleTodo(id) {
+        const todo = todos.find(t => t.id === id);
+
+        fetch(`/api/todos/${id}`, {
+          method: "PUT",
+          cache: 'no-store',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ completed: !todo.completed }),
+        })
+          .then(() => {
+            loadTodos();
+            showToast(todo.completed ? "Marked undone" : "Marked done");
+          });
+
+        return false;
+      }
+
+      function deleteTodo(id) {
+        fetch(`/api/todos/${id}`, { method: "DELETE", cache: 'no-store' })
+          .then(res => {
+            if (!res.ok) throw new Error();
+            loadTodos();
+            showToast("Deleted");
+          })
+          .catch(() => alert("Delete failed"));
+
+        return false;
+      }
+
+      function renderTodoList(todos) {
+        document.getElementById("todos").innerHTML = `
+          <ul class="mb-8 space-y-2">
+            ${todos
+              .map(
+                t => `
+              <li id="todo-${t.id}"
+                class="flex items-center space-x-4 p-3 bg-white shadow rounded ${
+                  t.completed ? "line-through text-gray-400" : ""
+                }">
+
+                <span class="flex-1">${t.title}</span>
+
+                <button type="button"
+                  class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  onclick="return toogleTodo(${t.id})">
+                  ${t.completed ? "Undo" : "Done"}
+                </button>
+
+                <button type="button"
+                  class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+                  onclick="return deleteTodo(${t.id})">
+                  Delete
+                </button>
+              </li>`
+              )
+              .join("")}
+          </ul>
+        `;
+      }
+
+      loadTodos();
+    </script>
+  </head>
+
+  <body class="bg-gray-100 min-h-screen flex font-sans">
+    <aside class="hidden md:flex w-64 bg-white border-r flex-col p-6 shadow-sm">
+      <h2 class="text-2xl font-bold mb-8 text-blue-600">TodoApp</h2>
+
+      <nav class="space-y-4">
+        <a href="/" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+        <a href="/todos" class="text-blue-600 font-medium">Todos</a>
+      </nav>
+    </aside>
+
+    <main class="flex-1 p-6">
+      <div class="max-w-xl">
+        <h1 class="text-3xl font-bold text-gray-800 mb-6"><%= title %></h1>
+
+        <div class="bg-white p-5 rounded-xl shadow-sm mb-6">
+          <form class="flex gap-3" onsubmit="return addTodo();">
+            <input
+              id="title"
+              type="text"
+              placeholder="Add a new task..."
+              class="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            <button
+              class="px-5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              Add
+            </button>
+          </form>
+        </div>
+
+        <div id="todos"></div>
+        <a href="/" class="block mt-6 text-blue-600 hover:underline">Back Home</a>
+      </div>
+    </main>
+
+    <div id="toast"
+      class="fixed bottom-5 right-5 bg-green-600 text-white px-4 py-2 rounded shadow-lg opacity-0 translate-y-3 transition-all">
+      Action successful!
+    </div>
+  </body>
+</html>
