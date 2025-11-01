@@ -11,6 +11,53 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuToggle = document.getElementById('menuToggle');
+      const sidebar = document.getElementById('sidebar');
+      const menuOverlay = document.getElementById('menuOverlay');
+      const menuIcon = document.getElementById('menuIcon');
+      const mainContent = document.getElementById('mainContent');
+
+      // Toggle menu
+      menuToggle.addEventListener('click', () => {
+        const isOpen = !sidebar.classList.contains('-translate-x-full');
+        
+        if (isOpen) {
+          sidebar.classList.add('-translate-x-full');
+          menuOverlay.classList.add('hidden');
+          menuIcon.classList.remove('fa-xmark');
+          menuIcon.classList.add('fa-bars');
+          mainContent.classList.remove('opacity-50');
+        } else {
+          sidebar.classList.remove('-translate-x-full');
+          menuOverlay.classList.remove('hidden');
+          menuIcon.classList.remove('fa-bars');
+          menuIcon.classList.add('fa-xmark');
+          mainContent.classList.add('opacity-50');
+        }
+      });
+
+      // Close menu when clicking overlay
+      menuOverlay.addEventListener('click', () => {
+        sidebar.classList.add('-translate-x-full');
+        menuOverlay.classList.add('hidden');
+        menuIcon.classList.remove('fa-xmark');
+        menuIcon.classList.add('fa-bars');
+        mainContent.classList.remove('opacity-50');
+      });
+
+      // Close menu when clicking a link
+      document.querySelectorAll('#sidebar a').forEach(link => {
+        link.addEventListener('click', () => {
+          sidebar.classList.add('-translate-x-full');
+          menuOverlay.classList.add('hidden');
+          menuIcon.classList.remove('fa-xmark');
+          menuIcon.classList.add('fa-bars');
+          mainContent.classList.remove('opacity-50');
+        });
+      });
+    });
+
     let todos = [];
 
     const showToast = (msg) => {
@@ -149,9 +196,19 @@
   </script>
 </head>
 
-<body class="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-300 font-sans flex">
-  <aside class="hidden md:flex flex-col w-64 bg-white shadow-xl p-8">
-    <div>
+<body class="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-300 font-sans flex flex-col md:flex-row">
+  
+  <!-- Mobile Hamburger Button -->
+  <button id="menuToggle" class="md:hidden fixed top-4 left-4 z-50 p-2 bg-blue-600 text-white rounded-lg shadow-lg transition-all duration-300">
+    <i id="menuIcon" class="fa-solid fa-bars text-xl"></i>
+  </button>
+
+  <!-- Overlay for mobile menu -->
+  <div id="menuOverlay" class="fixed inset-0 bg-opacity-10 md:hidden z-30 hidden transition-opacity duration-300"></div>
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed flex flex-col md:static md:flex flex-col w-64 bg-white shadow-xl p-8 h-screen md:h-auto z-40 -translate-x-full md:translate-x-0 transition-transform duration-300 overflow-y-auto">
+    <div class="flex-1 mt-12 md:mt-0">
       <h2 class="text-3xl font-bold text-blue-600 mb-8">Menu</h2>
 
       <nav class="space-y-2">
@@ -161,14 +218,15 @@
           <span>Home</span>
         </a>
         <a href="/todos"
-          class="flex items-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-lg font-medium shadow-md">
+          class="flex items-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-lg font-medium shadow-md hover:bg-blue-600 transition">
           <i class="fa-solid fa-clipboard-list"></i>
           <span>Todos</span>
         </a>
       </nav>
     </div>
 
-    <footer class="mt-auto text-center text-gray-400 border-t pt-4 text-sm">
+    <!-- Footer inside sidebar -->
+    <footer class="text-center text-gray-400 text-sm border-t pt-4 mt-auto">
       <p class="mb-2">Kết nối với tôi</p>
       <a href="https://www.facebook.com/share/g/19oiQixM4S/"
         class="text-blue-600 text-xl hover:text-blue-400 transition-colors duration-300">
@@ -177,27 +235,28 @@
     </footer>
   </aside>
 
-  <main class="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto">
+  <!-- Main Content -->
+  <main id="mainContent" class="flex-1 p-4 md:p-6 lg:p-10 overflow-y-auto transition-opacity duration-300 pt-20 md:pt-0">
     <div class="max-w-4xl mx-auto">
-      <div class="mb-8 md:mb-10">
+      <div class="mb-6 md:mb-8 lg:mb-10">
         <h1
-          class="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 mb-3">
+          class="text-3xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 mb-3">
           <%= title %>
         </h1>
       </div>
 
-      <div class="bg-white/90 backdrop-blur-sm p-6 md:p-8 rounded-3xl shadow-2xl mb-8 border border-gray-100">
+      <div class="bg-white/90 backdrop-blur-sm p-4 md:p-6 lg:p-8 rounded-3xl shadow-2xl mb-6 md:mb-8 border border-gray-100">
         <form class="flex flex-col md:flex-row gap-3 md:gap-4" onsubmit="return addTodo();">
           <div class="flex-1 relative">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-2xl">
               <i class="fa-solid fa-pen"></i>
             </div>
             <input id="title" type="text" placeholder="Thêm task mới..." required
-              class="w-full pl-14 pr-4 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white" />
+              class="w-full pl-14 pr-4 py-3 md:py-4 text-base md:text-lg border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white" />
           </div>
 
           <button type="submit"
-            class="px-8 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-xl flex items-center justify-center gap-2 whitespace-nowrap">
+            class="px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white text-base md:text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-xl flex items-center justify-center gap-2 whitespace-nowrap">
             <i class="fas fa-plus"></i>
             <span>Thêm Task</span>
           </button>
