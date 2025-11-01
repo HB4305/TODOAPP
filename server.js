@@ -19,7 +19,7 @@ app.use('/api', (req, res, next) => {
   next();
 });
 
-function readTodos() {
+const readTodos = () => {
   if (!fs.existsSync(dataPath)) {
     return [];
   }
@@ -28,7 +28,7 @@ function readTodos() {
   return JSON.parse(data);
 }
 
-function writeTodos(todos) {
+const writeTodos = (todos) => {
   if (!fs.existsSync(path.dirname(dataPath))) {
     fs.mkdirSync(path.dirname(dataPath), { recursive: true });
   }
