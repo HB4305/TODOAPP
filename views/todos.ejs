@@ -12,7 +12,7 @@
 
       function showToast(msg) {
         const t = document.getElementById("toast");
-        t.textContent = "✅ " + msg;
+        t.textContent = msg;
         t.classList.remove("opacity-0", "translate-y-3");
         setTimeout(() => t.classList.add("opacity-0", "translate-y-3"), 1500);
       }
@@ -76,29 +76,68 @@
       }
 
       function renderTodoList(todos) {
+        const completedCount = todos.filter(t => t.completed).length;
+        const totalCount = todos.length;
+        const progress = totalCount ? Math.round((completedCount / totalCount) * 100) : 0;
+
         document.getElementById("todos").innerHTML = `
-          <ul class="mb-8 space-y-2">
-            ${todos
+          ${todos.length > 0 ? `
+            <div class="mb-6 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 text-white p-6 rounded-2xl shadow-xl">
+              <div class="flex items-center justify-between mb-4">
+                <div>
+                  <p class="text-sm font-medium opacity-90 mb-1">Tiến độ hoàn thành</p>
+                  <p class="text-3xl font-bold">${completedCount} / ${totalCount}</p>
+                </div>
+                <div class="text-6xl animate-bounce">
+                  ${completedCount === totalCount && totalCount > 0 ? '<i class="fa-solid fa-trophy"></i>' : '<i class="fa-solid fa-tasks"></i>'}
+                </div>
+              </div>
+              <div class="relative">
+                <div class="h-3 bg-white/30 rounded-full overflow-hidden backdrop-blur-sm">
+                  <div class="h-full bg-gradient-to-r from-green-400 to-emerald-500 rounded-full transition-all duration-700 ease-out shadow-lg"
+                    style="width: ${progress}%;"></div>
+                </div>
+                <p class="text-right text-xs font-semibold mt-2 opacity-90">${progress}% hoàn thành</p>
+              </div>
+            </div>
+          ` : ''}
+
+        <ul class="space-y-2">
+            ${todos.length === 0 ? `
+              <li class="text-center py-16 bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border-2 border-dashed border-blue-300">
+                <div class="text-7xl mb-4 animate-pulse"><i class="fas fa-clipboard-list"></i></div>
+                <p class="text-gray-600 text-xl font-medium mb-2">Chưa có task nào</p>
+                <p class="text-gray-400 text-sm">Hãy thêm task đầu tiên!</p>
+              </li>
+            ` : todos
               .map(
                 t => `
               <li id="todo-${t.id}"
-                class="flex items-center space-x-4 p-3 bg-white shadow rounded ${
-                  t.completed ? "line-through text-gray-400" : ""
+                class="group relative flex items-center gap-4 p-5 bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border-l-4 ${
+                  t.completed ? "border-green-500 bg-gray-50" : "border-blue-500"
                 }">
 
-                <span class="flex-1">${t.title}</span>
+                <span class="flex-1 text-lg font-medium ${
+                  t.completed ? "line-through text-gray-400" : "text-gray-800"
+                }">${t.title}</span>
 
-                <button type="button"
-                  class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700"
-                  onclick="return toogleTodo(${t.id})">
-                  ${t.completed ? "Undo" : "Done"}
-                </button>
+                <div class="flex gap-2 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  <button type="button"
+                    class="px-5 py-2.5 ${
+                      t.completed ? 
+                      "bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700" :
+                      "bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
+                    } text-white text-sm font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                    onclick="return toogleTodo(${t.id})">
+                    ${t.completed ? '<i class="fas fa-undo mr-1"></i>Hoàn tác' : '<i class="fas fa-check mr-1"></i>Xong'}
+                  </button>
 
-                <button type="button"
-                  class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
-                  onclick="return deleteTodo(${t.id})">
-                  Delete
-                </button>
+                  <button type="button"
+                    class="px-5 py-2.5 bg-gradient-to-r from-red-500 to-pink-600 hover:from-red-600 hover:to-pink-700 text-white text-sm font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                    onclick="return deleteTodo(${t.id})">
+                    <i class="fas fa-trash mr-1"></i>Xóa
+                  </button>
+                </div>
               </li>`
               )
               .join("")}
@@ -138,35 +177,52 @@
       </footer>
     </aside>
 
-    <main class="flex-1 p-6">
-      <div class="max-w-xl">
-        <h1 class="text-3xl font-bold text-gray-800 mb-6"><%= title %></h1>
+    <main class="flex-1 p-6 md:p-10 lg:p-12 overflow-y-auto">
+      <div class="max-w-4xl mx-auto">
+        <div class="mb-8 md:mb-10">
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 mb-3">
+            <%= title %>
+          </h1>
+        </div>
 
-        <div class="bg-white p-5 rounded-xl shadow-sm mb-6">
-          <form class="flex gap-3" onsubmit="return addTodo();">
-            <input
+        <div class="bg-white/90 backdrop-blur-sm p-6 md:p-8 rounded-3xl shadow-2xl mb-8 border border-gray-100">
+          <form class="flex flex-col md:flex-row gap-3 md:gap-4" onsubmit="return addTodo();">
+            <div class="flex-1 relative">
+              <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-2xl">
+                <i class="fa-solid fa-pen"></i>
+              </div>
+              <input
               id="title"
               type="text"
-              placeholder="Add a new task..."
-              class="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+              placeholder="Thêm task mới..." required
+              class="w-full pl-14 pr-4 py-4 text-lg border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white"
+              />
+            </div>
 
-            <button
-              class="px-5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            <button type="submit"
+              class="px-8 py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-xl flex items-center justify-center gap-2 whitespace-nowrap"
             >
-              Add
+              <i class="fas fa-plus"></i>
+              <span>Thêm Task</span>
             </button>
           </form>
         </div>
 
-        <div id="todos"></div>
-        <a href="/" class="block mt-6 text-blue-600 hover:underline">Back Home</a>
+        <div id="todos" class="mb-8"></div>
+        <div class="text-center mt-10">
+          <a href="/" 
+            class="inline-flex items-center gap-2 px-6 py-3 text-blue-600 hover:text-blue-700 font-semibold text-lg bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
+            <i class="fas fa-arrow-left"></i>
+            <span>Về trang chủ</span>
+          </a>
+        </div>
       </div>
     </main>
 
     <div id="toast"
-      class="fixed bottom-5 right-5 bg-green-600 text-white px-4 py-2 rounded shadow-lg opacity-0 translate-y-3 transition-all">
-      Action successful!
+      class="fixed bottom-8 right-8 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 text-white px-6 py-4 rounded-2xl shadow-2xl opacity-0 translate-y-3 transition-all duration-300 text-lg font-bold flex items-center gap-3 backdrop-blur-sm">
+      <i class="fas fa-check-circle text-2xl"></i>
+      <span>Thành công!</span>
     </div>
   </body>
 </html>
