@@ -72,7 +72,7 @@ app.put("/api/todos/:id", (req, res) => {
 });
 
 app.get("/todos", (req, res) => {
-  res.render("todos", { title: "TODO list" });
+  res.render("todos", { title: "Danh sách công việc" });
 });
 
 app.delete("/api/todos/:id", (req, res) => {
@@ -85,7 +85,7 @@ app.delete("/api/todos/:id", (req, res) => {
 
 // Root route
 app.get("/", (req, res) => {
-  res.render("index", { title: "TODO", message: "Welcome to the TODO app!" });
+  res.render("index", { title: "TODO", message: "Chào mừng bạn đến với ứng dụng Quản lý công việc!" });
 });
 
 // Start server

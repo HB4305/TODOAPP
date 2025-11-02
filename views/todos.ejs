@@ -156,8 +156,8 @@
             ${todos.length === 0 ? `
               <li class="text-center py-16 bg-white/80 backdrop-blur-sm rounded-3xl shadow-lg border-2 border-dashed border-blue-300">
                 <div class="text-7xl mb-4 animate-pulse"><i class="fas fa-clipboard-list"></i></div>
-                <p class="text-gray-600 text-xl font-medium mb-2">Chưa có task nào</p>
-                <p class="text-gray-400 text-sm">Hãy thêm task đầu tiên!</p>
+                <p class="text-gray-600 text-xl font-medium mb-2">Chưa có việc nào</p>
+                <p class="text-gray-400 text-sm">Hãy thêm việc đầu tiên!</p>
               </li>
             ` : todos
           .map(
@@ -207,20 +207,20 @@
   <div id="menuOverlay" class="fixed inset-0 bg-opacity-10 lg:hidden z-30 hidden transition-opacity duration-300"></div>
 
   <!-- Sidebar -->
-  <aside id="sidebar" class="fixed lg:static flex flex-col w-64 bg-white shadow-xl p-8 h-screen lg:h-screen lg:max-h-screen z-40 -translate-x-full lg:translate-x-0 transition-transform duration-300 overflow-y-auto lg:overflow-hidden">
+  <aside id="sidebar" class="sticky top-0 flex flex-col w-64 bg-white shadow-xl p-8 h-screen z-40 overflow-y-auto transition-transform duration-300">
     <div class="flex-1 mt-12 lg:mt-0">
-      <h2 class="text-3xl font-bold text-blue-600 mb-8">Menu</h2>
+      <h2 class="text-3xl font-bold text-blue-600 mb-8">Bảng chọn</h2>
 
       <nav class="space-y-2">
         <a href="/"
           class="flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg font-medium transition">
           <i class="fa-solid fa-house"></i>
-          <span>Home</span>
+          <span>Trang chủ</span>
         </a>
         <a href="/todos"
           class="flex items-center gap-3 px-4 py-3 bg-blue-500 text-white rounded-lg font-medium shadow-md hover:bg-blue-600 transition">
           <i class="fa-solid fa-clipboard-list"></i>
-          <span>Todos</span>
+          <span>Việc cần làm</span>
         </a>
       </nav>
     </div>
@@ -240,7 +240,7 @@
     <div class="max-w-4xl mx-auto">
       <div class="mb-6 md:mb-8 lg:mb-10">
         <h1
-          class="text-3xl md:mt-12 md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 mb-3">
+          class="text-3xl md:mt-12 md:text-5xl lg:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 mb-3 leading-[1.5]">
           <%= title %>
         </h1>
       </div>
@@ -251,14 +251,14 @@
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-2xl">
               <i class="fa-solid fa-pen"></i>
             </div>
-            <input id="title" type="text" placeholder="Thêm task mới..." required
+            <input id="title" type="text" placeholder="Thêm việc mới..." required
               class="w-full pl-14 pr-4 py-3 md:py-4 text-base md:text-lg border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-4 focus:ring-blue-300 focus:border-blue-500 transition-all duration-200 bg-gray-50 focus:bg-white" />
           </div>
 
           <button type="submit"
             class="px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white text-base md:text-lg font-bold rounded-2xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl shadow-xl flex items-center justify-center gap-2 whitespace-nowrap">
             <i class="fas fa-plus"></i>
-            <span>Thêm Task</span>
+            <span>Thêm việc</span>
           </button>
         </form>
       </div>
