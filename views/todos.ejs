@@ -107,7 +107,7 @@
       })
         .then(() => {
           loadTodos();
-          showToast(todo.completed ? "Marked undone" : "Marked done");
+          showToast(todo.completed ? "Chưa hoàn thành" : "Hoàn thành");
         });
 
       return false;
@@ -118,9 +118,9 @@
         .then(res => {
           if (!res.ok) throw new Error();
           loadTodos();
-          showToast("Deleted");
+          showToast("Đã xóa");
         })
-        .catch(() => alert("Delete failed"));
+        .catch(() => alert("Xóa thất bại"));
 
       return false;
     }

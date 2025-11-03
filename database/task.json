@@ -1,23 +1,14 @@
 [
   {
-    "title": "Đi học",
-    "id": 1,
-    "completed": false
+    "title": "Làm UI",
+    "id": 1
   },
   {
-    "title": "Chơi thể thao",
+    "title": "Fix responsive",
     "id": 2
   },
   {
-    "title": "Làm bài tập về nhà",
+    "title": "Sửa sidebar",
     "id": 3
-  },
-  {
-    "title": "Chỉnh sửa Responsive UI",
-    "id": 4
-  },
-  {
-    "title": "Sửa lỗi sidebar",
-    "id": 5
   }
 ]
